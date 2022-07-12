@@ -3,6 +3,7 @@ using System;
 using ModLoader;
 using System.IO;
 using System.Reflection;
+using SFS.Variables;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -74,15 +75,12 @@ namespace VanillaUpgrades
             File.WriteAllText(WindowManager.inst.windowDir, WindowManager.settings.ToString());
         }
 
-        public override void Unload()
-        {
-            throw new NotImplementedException();
-        }
-
 
 
         public static bool menuOpen;
 
+        public static Bool_Local menuOpen1 = new Bool_Local();
+        
         public static GameObject mainObject;
 
         public static GameObject buildObject;

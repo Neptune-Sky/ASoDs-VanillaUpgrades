@@ -1,9 +1,12 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using System.Collections.Generic;
 using SFS;
 using SFS.Builds;
 using SFS.Parts.Modules;
+using SFS.UI.ModGUI;
 using UnityEngine;
+using Type = SFS.UI.ModGUI.Type;
 
 namespace VanillaUpgrades
 {
@@ -70,6 +73,52 @@ namespace VanillaUpgrades
         }
     }
     public class BuildSettings : MonoBehaviour
+    {
+        public static bool snapping, noAdaptation, noAdaptOverride;
+        static GameObject GUIHolder;
+        public static BuildSettings main;
+        static readonly int windowID = Builder.GetRandomID();
+
+        void Awake() => main = this;
+        void Start() => CreateGUI();
+        void OnDestroy() => DestroyGUI();
+        
+        public void CreateGUI()
+        {
+            GUIHolder = new GameObject("VU BuildGUI Holder");
+            GUIHolder.SetActive(false);
+            Builder.AttachToCanvas(GUIHolder, Builder.SceneToAttach.BaseScene);
+            Main.menuOpen1.OnChange += () => main.UpdateGUIActive(Main.menuOpen1);
+
+            Window window = Builder.CreateWindow(GUIHolder, 300, 250, -700, 400, windowID, true, true,
+                titleText: "Build Settings");
+            
+            // Layout
+            window.CreateLayoutGroup(Type.Vertical).spacing = 15f;
+            window.CreateLayoutGroup(Type.Vertical).DisableChildControl();
+            window.CreateLayoutGroup(Type.Vertical).childAlignment = TextAnchor.MiddleCenter;
+
+            GUI_Utility.CreateBoolInput(window.ChildrenHolder, 280, 50, "Snapping", 0.8f, () => snapping,
+                () => snapping ^= true, 0.8f);
+            
+            GUI_Utility.CreateBoolInput(window.ChildrenHolder, 280, 50, "Adapting", 0.8f, () => !noAdaptation,
+                () => noAdaptation ^= true, 0.8f);
+            
+            GUI_Utility.CreateBoolInput(window.ChildrenHolder, 280, 50, "ΔV Calculator", 0.8f, () => DVCalc.showCalc,
+                () => DVCalc.showCalc ^= true, 0.8f);
+        }
+
+        public void DestroyGUI()
+        {
+            Main.menuOpen1.OnChange -= () => main.UpdateGUIActive(!Main.menuOpen1 && (bool)Config.settings["showBuildGUI"]);
+            if (GUIHolder != null)
+                Destroy(GUIHolder);
+            GUIHolder = null;
+        }
+
+        void UpdateGUIActive(bool active) => GUIHolder.SetActive(active);
+        }
+    /*public class BuildSettings : MonoBehaviour
     {
         // Token: 0x0400136C RID: 4972
         public static Rect windowRect = new Rect((float)WindowManager.settings["buildSettings"]["x"], (float)WindowManager.settings["buildSettings"]["y"], 180f * WindowManager.scale.x, 100f * WindowManager.scale.y);
@@ -153,5 +202,5 @@ namespace VanillaUpgrades
             if (oldRect != windowRect) WindowManager.settings["buildSettings"]["x"] = windowRect.x; WindowManager.settings["buildSettings"]["y"] = windowRect.y;
 
         }
-    }
+    }*/
 }

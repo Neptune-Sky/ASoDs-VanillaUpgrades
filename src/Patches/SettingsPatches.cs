@@ -20,6 +20,7 @@ namespace VanillaUpgrades
                 Config.showSettings = true;
             }
             Main.menuOpen = true;
+            Main.menuOpen1.Value = true;
         }
     }
 
@@ -31,6 +32,7 @@ namespace VanillaUpgrades
         {
             Config.showSettings = false;
             Main.menuOpen = false;
+            Main.menuOpen1.Value = false;
             File.WriteAllText(Config.configPath, Config.settings.ToString());
             if (Main.buildObject != null)
             {

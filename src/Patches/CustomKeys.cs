@@ -139,7 +139,7 @@ namespace VanillaUpgrades
         {
             KeysNode keysNode = BuildManager.main.build_Input.keysNode;
 
-            keysNode.AddOnKeyDown(CustomKeybinds.custom_keys.Launch, () => BuildSettings.Launch());
+            keysNode.AddOnKeyDown(CustomKeybinds.custom_keys.Launch, () => BuildManager.main.Launch());
             keysNode.AddOnKeyDown(CustomKeybinds.custom_keys.Toggle_Symmetry, () => BuildManager.main.ToggleSymmetryMode());
             keysNode.AddOnKeyDown(CustomKeybinds.custom_keys.Toggle_Interior, () => InteriorManager.main.ToggleInteriorView());
 
